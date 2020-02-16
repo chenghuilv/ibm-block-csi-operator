@@ -100,6 +100,7 @@ func (s *csiNodeSyncer) ensurePodSpec() corev1.PodSpec {
 		ServiceAccountName: config.GetNameForResource(config.CSINodeServiceAccount, s.driver.Name),
 		Affinity:           s.driver.Spec.Node.Affinity,
 		Tolerations:        s.driver.Spec.Node.Tolerations,
+		DNSPolicy:   "ClusterFirstWithHostNet", // To have DNS options set along with hostNetwork, you have to specify DNS policy explicitly to 'ClusterFirstWithHostNet'
 	}
 }
 
@@ -133,7 +134,10 @@ func (s *csiNodeSyncer) ensureContainersSpec() []corev1.Container {
 	})
 
 	nodePlugin.SecurityContext = &corev1.SecurityContext{
-		Privileged:               boolptr.True(),
+		Privileged: boolptr.True(),
+		Capabilities: &corev1.Capabilities{
+			Add: []corev1.Capability{"SYS_ADMIN"},
+		},
 		AllowPrivilegeEscalation: boolptr.True(),
 	}
 	fillSecurityContextCapabilities(
