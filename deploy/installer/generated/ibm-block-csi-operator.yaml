@@ -1436,7 +1436,7 @@ spec:
                   - key: kubernetes.io/arch
                     operator: In
                     values:
-                      - amd64
+                      - s390x
       containers:
       - name: ibm-block-csi-operator
         resources:
@@ -1460,7 +1460,7 @@ spec:
           capabilities:
             drop:
             - ALL
-        image: ibmcom/ibm-block-csi-operator:1.1.0
+        image: stg-artifactory.haifa.ibm.com:5030/ibm-block-csi-operator-s390x:latest
         imagePullPolicy: IfNotPresent
         command:
         - ibm-block-csi-operator

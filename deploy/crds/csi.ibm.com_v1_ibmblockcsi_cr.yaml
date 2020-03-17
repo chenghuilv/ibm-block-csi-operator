@@ -11,8 +11,8 @@ spec:
   # controller is a statefulSet with ibm-block-csi-driver-controller
   # container and csi-provisioner, csi-attacher and livenessprobe sidecars.
   controller:
-    repository: ibmcom/ibm-block-csi-driver-controller
-    tag: "1.1.0"
+    repository: stg-artifactory.haifa.ibm.com:5030/ibm-block-csi-driver-controller-s390x
+    tag: "latest"
     imagePullPolicy: IfNotPresent
     affinity:
       nodeAffinity:
@@ -22,13 +22,13 @@ spec:
                 - key: kubernetes.io/arch
                   operator: In
                   values:
-                    - amd64
+                    - s390x
 
   # node is a daemonSet with ibm-block-csi-driver-node container
   # and csi-node-driver-registrar and livenessprobe sidecars.
   node:
-    repository: ibmcom/ibm-block-csi-driver-node
-    tag: "1.1.0"
+    repository: stg-artifactory.haifa.ibm.com:5030/ibm-block-csi-driver-node-s390x
+    tag: "1.1.0_b03_CSI_1088"
     imagePullPolicy: IfNotPresent
     affinity:
       nodeAffinity:
@@ -38,7 +38,7 @@ spec:
                 - key: kubernetes.io/arch
                   operator: In
                   values:
-                    - amd64
+                    - s390x
 
 #    tolerations:
 #    - effect: NoSchedule
@@ -47,20 +47,20 @@ spec:
 
   sidecars:
   - name: csi-node-driver-registrar
-    repository: quay.io/k8scsi/csi-node-driver-registrar
-    tag: "v1.2.0"
+    repository: registry.redhat.io/openshift4/ose-csi-driver-registrar
+    tag: "latest"
     imagePullPolicy: IfNotPresent
   - name: csi-provisioner
-    repository: quay.io/k8scsi/csi-provisioner
-    tag: "v1.3.0"
+    repository: registry.redhat.io/openshift4/ose-csi-external-provisioner-rhel7
+    tag: "latest"
     imagePullPolicy: IfNotPresent
   - name: csi-attacher
-    repository: quay.io/k8scsi/csi-attacher
-    tag: "v1.2.1"
+    repository: registry.redhat.io/openshift4/ose-csi-external-attacher
+    tag: "latest"
     imagePullPolicy: IfNotPresent
   - name: livenessprobe
-    repository: quay.io/k8scsi/livenessprobe
-    tag: "v1.1.0"
+    repository: registry.redhat.io/openshift4/ose-csi-livenessprobe
+    tag: "latest"
     imagePullPolicy: IfNotPresent
 
 #  imagePullSecrets:
