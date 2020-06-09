@@ -11,8 +11,8 @@ spec:
   # controller is a statefulSet with ibm-block-csi-driver-controller
   # container and csi-provisioner, csi-attacher and livenessprobe sidecars.
   controller:
-    repository: ibmcom/ibm-block-csi-driver-controller
-    tag: "1.1.0"
+    repository: <controller-image>
+    tag: "<controller-image-tag>"
     imagePullPolicy: IfNotPresent
     affinity:
       nodeAffinity:
@@ -22,13 +22,14 @@ spec:
                 - key: kubernetes.io/arch
                   operator: In
                   values:
-                    - amd64
+                    - s390x
+                    - ppc64le
 
   # node is a daemonSet with ibm-block-csi-driver-node container
   # and csi-node-driver-registrar and livenessprobe sidecars.
   node:
-    repository: ibmcom/ibm-block-csi-driver-node
-    tag: "1.1.0"
+    repository: <node-image>
+    tag: "<node-image-tag>"
     imagePullPolicy: IfNotPresent
     affinity:
       nodeAffinity:
@@ -38,34 +39,31 @@ spec:
                 - key: kubernetes.io/arch
                   operator: In
                   values:
-                    - amd64
+                    - s390x
+                    - ppc64le
 
-#    tolerations:
-#    - effect: NoSchedule
-#      key: node-role.kubernetes.io/master
-#      operator: Exists
+  #    tolerations:
+  #    - effect: NoSchedule
+  #      key: node-role.kubernetes.io/master
+  #      operator: Exists
 
   sidecars:
-  - name: csi-node-driver-registrar
-    repository: quay.io/k8scsi/csi-node-driver-registrar
-    tag: "v1.2.0"
-    imagePullPolicy: IfNotPresent
-  - name: csi-provisioner
-    repository: quay.io/k8scsi/csi-provisioner
-    tag: "v1.5.0"
-    imagePullPolicy: IfNotPresent
-  - name: csi-attacher
-    repository: quay.io/k8scsi/csi-attacher
-    tag: "v1.2.1"
-    imagePullPolicy: IfNotPresent
-  - name: csi-snapshotter
-    repository: quay.io/k8scsi/csi-snapshotter
-    tag: "v2.1.0"
-    imagePullPolicy: IfNotPresent
-  - name: livenessprobe
-    repository: quay.io/k8scsi/livenessprobe
-    tag: "v1.1.0"
-    imagePullPolicy: IfNotPresent
+    - name: csi-node-driver-registrar
+      repository: registry.redhat.io/openshift4/ose-csi-driver-registrar
+      tag: "v4.3"
+      imagePullPolicy: IfNotPresent
+    - name: csi-provisioner
+      repository: registry.redhat.io/openshift4/ose-csi-external-provisioner-rhel7
+      tag: "v4.3"
+      imagePullPolicy: IfNotPresent
+    - name: csi-attacher
+      repository: registry.redhat.io/openshift4/ose-csi-external-attacher
+      tag: "v4.3"
+      imagePullPolicy: IfNotPresent
+    - name: livenessprobe
+      repository: registry.redhat.io/openshift4/ose-csi-livenessprobe
+      tag: "v4.3"
+      imagePullPolicy: IfNotPresent
 
 #  imagePullSecrets:
 #  - "secretName"
